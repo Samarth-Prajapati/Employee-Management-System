@@ -1,6 +1,6 @@
 from EmployeeManagement.database import create_tables, get_db, Employee
 from EmployeeManagement.api.model import EmployeeModel, EmployeePatchModel
-from EmployeeManagement.api.validator import check_email, check_contact, check_salary
+from EmployeeManagement.api.validator import check_contact, check_salary
 from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 app = FastAPI()
@@ -27,8 +27,6 @@ def fetch_employee(employee_id: int, db: Session = Depends(get_db)):
 
 @app.post("/employees", status_code = status.HTTP_201_CREATED, tags = ["Employees"])
 def add_employee(request: EmployeeModel, db: Session = Depends(get_db)):
-    if not check_email(request.email):
-        raise HTTPException(status_code = 400, detail = "Invalid Email")
     if not check_contact(request.phone_number):
         raise HTTPException(status_code = 400, detail = "Invalid Phone Number")
     if not check_salary(request.salary):
@@ -45,8 +43,6 @@ def update_employee(employee_id: int, request: EmployeeModel, db: Session = Depe
     if not employee:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = "Employee not found")
     employee.name = request.name
-    if not check_email(request.email):
-        raise HTTPException(status_code = 400, detail = "Invalid Email")
     employee.email = request.email
     employee.department = request.department
     if not check_salary(request.salary):
