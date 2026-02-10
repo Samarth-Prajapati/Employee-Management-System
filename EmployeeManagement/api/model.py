@@ -1,19 +1,19 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr, StrictBool, StrictStr, StrictFloat
 from typing import Optional
 
 class EmployeeModel(BaseModel):
-    name: str
-    email: str
-    department: str
-    salary: float
-    phone_number: str
-    is_active: bool
+    name: StrictStr
+    email: EmailStr
+    department: StrictStr
+    salary: StrictFloat
+    phone_number: StrictStr
+    is_active: StrictBool
 
     class Config:
         orm_mode = True
 
 class EmployeePatchModel(BaseModel):
-    is_active: Optional[bool] = True
+    is_active: Optional[StrictBool] = True
 
     class Config:
         orm_mode = True
